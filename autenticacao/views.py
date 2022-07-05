@@ -6,7 +6,7 @@ from django.shortcuts import render
 
 
 def cadastro(request):
-    pass
+    return render(request, 'cadastro.html')
 
 def logar(request):
     pass
