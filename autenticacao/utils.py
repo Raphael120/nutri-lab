@@ -1,7 +1,11 @@
 import re
 
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.messages import constants
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 
 
 def username_is_valid(request, usuario):
@@ -28,7 +32,8 @@ def password_is_valid(request, senha, confirmar_senha):
     """verifica se a senha é válida."""
 
     if len(senha.strip()) == 0 or len(confirmar_senha.strip()) == 0:
-        messages.add_message(request, constants.ERROR, 'Os campos "Senha" e "Confirmar senha" são obrigatórios')
+        messages.add_message(request, constants.ERROR,
+                             'Os campos "Senha" e "Confirmar senha" são obrigatórios')
 
     if len(senha) < 6:
         messages.add_message(request, constants.ERROR,
@@ -56,3 +61,16 @@ def password_is_valid(request, senha, confirmar_senha):
         return False
 
     return True
+
+
+def email_html(path_template: str, assunto: str, para: list, **kwargs) -> dict:
+    """função para enviar e-mail"""
+    html_content = render_to_string(path_template, kwargs)
+    text_content = strip_tags(html_content)
+
+    email = EmailMultiAlternatives(
+        assunto, text_content, settings.EMAIL_HOST_USER, para)
+
+    email.attach_alternative(html_content, 'text/html')
+    email.send()
+    return{'status': 1}
