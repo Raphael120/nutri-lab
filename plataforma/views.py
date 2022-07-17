@@ -3,8 +3,9 @@ from datetime import datetime
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.messages import constants
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.views.decorators.csrf import csrf_exempt
 
 from plataforma.models import DadosPaciente, Paciente
 
@@ -132,3 +133,18 @@ def dados_paciente(request, id):
                 message='Erro interno do sistema'
             )
             return redirect('/dados_paciente/')
+
+
+@login_required(login_url='/auth/logar')
+@csrf_exempt
+def grafico_paciente(request, id):
+    paciente = Paciente.objects.get(id=id)
+    dados = DadosPaciente.objects.filter(paciente=paciente).order_by('data')
+
+    pesos = [dado.peso for dado in dados]
+    labels = list(range(len(pesos)))
+    data = {
+        'peso': pesos,
+        'labels': labels
+    }
+    return JsonResponse(data)
