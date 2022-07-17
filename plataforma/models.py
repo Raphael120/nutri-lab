@@ -20,3 +20,19 @@ class Paciente(models.Model):
 
     def __str__(self):
         return f'{self.nome} {self.sobrenome}'
+
+
+class DadosPaciente(models.Model):
+    paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE)
+    data = models.DateTimeField()
+    peso = models.IntegerField()
+    altura = models.IntegerField()
+    percentual_gordura = models.IntegerField()
+    percentual_musculo = models.IntegerField()
+    colesterol_hdl = models.IntegerField()
+    colesterol_ldl = models.IntegerField()
+    colesterol_total = models.IntegerField()
+    triglicerideos = models.IntegerField()
+
+    def __str__(self):
+        return f'Paciente({self.paciente.nome} {self.paciente.sobrenome}, {self.peso}kg)'
