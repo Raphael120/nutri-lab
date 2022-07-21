@@ -142,9 +142,13 @@ def grafico_paciente(request, id):
     dados = DadosPaciente.objects.filter(paciente=paciente).order_by('data')
 
     pesos = [dado.peso for dado in dados]
-    labels = list(range(len(pesos)))
+    percentual_gordura = [dado.percentual_gordura for dado in dados]
+    percentual_musculo = [dado.percentual_musculo for dado in dados]
+    labels = list(range(1, len(pesos) + 1))
     data = {
         'peso': pesos,
+        'gordura': percentual_gordura,
+        'musculo': percentual_musculo,
         'labels': labels
     }
     return JsonResponse(data)

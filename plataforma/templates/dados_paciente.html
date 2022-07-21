@@ -56,12 +56,14 @@
     </table>
 
     <!-- Gráfico -->
-    <div style="width: 80%;">
-        <canvas id="myChart"></canvas>
-    </div>
+    <div class="row">
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
+        <div style="width: 47%;">
+            <canvas id="myChart"></canvas>
+        </div>
+        
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
         fetch("/grafico_paciente/{{paciente.id}}/", {
             method: 'POST',
         }).then(function (result) {
@@ -69,12 +71,14 @@
         }).then(function (data_paciente) {
             const data = {
                 labels: data_paciente['labels'],
-                datasets: [{
-                    label: 'Peso paciente',
+                datasets: [
+                {
+                    label: 'Peso (Kg)',
                     backgroundColor: 'rgb(255, 99, 132)',
                     borderColor: 'rgb(255, 99, 132)',
-                    data: data_paciente['peso'],
-                }]
+                    data: data_paciente['peso']
+                },
+                ]
             };
             const config = {
                 type: 'line',
@@ -84,9 +88,49 @@
             const myChart = new Chart(
                 document.getElementById('myChart'),
                 config
-            );
-        })
-    </script>
+                );
+            })
+        </script>
+
+        <div style="width: 47%; margin-left:50px; ">
+            <canvas id="myChart2"></canvas>
+        </div>
+        
+        <script>
+            fetch("/grafico_paciente/{{paciente.id}}/", {
+                method: 'POST',
+            }).then(function (result) {
+                return result.json()
+            }).then(function (data_paciente2) {
+                const data2 = {
+                    labels: data_paciente2['labels'],
+                    datasets: [
+                    {
+                        label: '% gordura',
+                        backgroundColor: 'rgb(255, 215, 0)',
+                        borderColor: 'rgb(255, 215 , 0)',
+                        data: data_paciente2['gordura']
+                    },
+                    {
+                        label: '% musculo',
+                        backgroundColor: 'rgb(0,255,127)',
+                        borderColor: 'rgb(0,255,127)',
+                        data: data_paciente2['musculo']
+                    }
+                    ]
+                };
+                const config = {
+                    type: 'line',
+                    data: data2,
+                    options: {}
+                };
+                const myChart2 = new Chart(
+                    document.getElementById('myChart2'),
+                    config
+                );
+            })
+        </script>
+    </div>
 
 
     <!-- Modal -->
