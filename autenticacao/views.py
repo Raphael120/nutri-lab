@@ -18,7 +18,7 @@ from .utils import (email_html, email_is_valid, password_is_valid,
 def cadastro(request):
     if request.method == 'GET':
         if request.user.is_authenticated:
-            return redirect('/')
+            return redirect('/pacientes')
 
         return render(request, 'cadastro.html')
 
@@ -85,7 +85,7 @@ def cadastro(request):
 def logar(request):
     if request.method == 'GET':
         if request.user.is_authenticated:
-            return redirect('/')
+            return redirect('/pacientes')
 
         return render(request, 'logar.html')
 
@@ -101,7 +101,7 @@ def logar(request):
             return redirect('/auth/logar')
         else:
             auth.login(request, usuario)
-            return redirect('/')
+            return redirect('/pacientes')
 
 
 def sair(request):
