@@ -3,7 +3,8 @@
 
 {% block 'head' %}
     <link rel="stylesheet" href="{% static 'plataforma/css/plataforma.css' %}" />
-{% endblock %}
+    <link rel="stylesheet" href="{% static 'plataforma/css/plano_alimentar.css' %}">
+    {% endblock %}
 
 {% block 'body' %}
     <div class="container-fluid">
@@ -25,7 +26,7 @@
                         <h3>Dados do Paciente</h3>
                     </div>
                 </a>
-                <a href="#" class="link-lateral">
+                <a href="{% url 'listar_plano_alimentar' %}" class="link-lateral">
                     <div class="card-lateral">
                         <img src="{% static 'plataforma/img/plano_alimentar.png' %}"/>
                         <br/>
