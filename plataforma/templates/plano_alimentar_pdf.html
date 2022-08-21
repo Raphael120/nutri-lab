@@ -1,0 +1,76 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="utf-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, shrink-to-fit=no"
+        />
+    </head>
+
+    <style>
+        @page {
+            size: a4 portrait;
+
+            @frame content_frame {
+            left: 100pt;
+            width: 600pt;
+            top: 50pt;
+            height: 692pt;
+            }
+        }
+        table { -pdf-keep-with-next: true; }
+        p { margin: 0; -pdf-keep-with-next: true; }
+        p.separator { -pdf-keep-with-next: false; font-size: 6pt; }
+    </style>
+
+    {% block 'plataforma' %}
+        <br>
+        <div>
+            <div>
+                <h2>{{paciente.nome}} {{paciente.sobrenome}}</h2>
+                <h4>{{paciente.idade}} anos</h4>
+            </div>
+        </div>
+        <br>
+        <br>
+        {% for r in refeicao %}
+            <table width="565px" cellpadding="5" border="2px"  border-style="hidden">
+                <div> 
+                    <thead>
+                        <tr>
+                            <th colspan="2" style="background-color: ghostwhite;">
+                                <span>Opções de {{r.titulo}}</span>
+                                <span> ({{r.horario}}h) </span>
+                            </th>
+                        </tr>
+                    </thead>
+                </div>
+
+                <tbody>
+                    {% for o in opcao %}
+                        {% if o.refeicao == r %}
+                            <tr>
+                                <td align="right" width="100px">
+                                    <img src="{{o.imagem.url}}" style="zoom: 50%;">
+                                </td>
+
+                                <td align="justify">
+                                    <span>{{o.descricao}}</span>
+                                </td>
+                            </tr>
+                        {% endif %}
+                    {% empty %}
+                        <p>- Não existem refeições cadastradas.</p>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <br>
+        {% empty %}
+            <p>- Não existem refeições cadastradas.</p>
+        {% endfor %}
+
+    {% endblock%}
+</html>
