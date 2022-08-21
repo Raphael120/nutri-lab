@@ -58,7 +58,6 @@ def dados_paciente_is_valid(request, peso, altura, gordura, musculo, hdl, ldl, c
             request=request,
             level=constants.ERROR,
             message='Você inseriu um dado inválido -> Peso'
-            
         )
         return False
 
@@ -117,5 +116,36 @@ def dados_paciente_is_valid(request, peso, altura, gordura, musculo, hdl, ldl, c
             message='Você inseriu um dado inválido -> Triglicerídeos'
         )
         return False
-    
+
     return True
+
+
+# Função para converter URLs relativos em caminhos absolutos do sistema (para gerar pdf)
+def link_callback(uri, rel):
+    """
+    Convert HTML URIs to absolute system paths so xhtml2pdf can access those resources
+    """
+
+    import os
+
+    from django.conf import settings
+
+    sUrl = settings.STATIC_URL
+    sRoot = settings.STATIC_ROOT
+    mUrl = settings.MEDIA_URL
+    mRoot = settings.MEDIA_ROOT
+
+    if uri.startswith(mUrl):
+        path = os.path.join(mRoot, uri.replace(mUrl, ''))
+    elif uri.startswith(sUrl):
+        path = os.path.join(sRoot, uri.replace(sUrl, ''))
+    else:
+        return uri
+
+    # make sure that file exists
+    if not os.path.isfile(path):
+        raise Exception(
+            f'media URI must start with {sUrl} or {mUrl}'
+        )
+
+    return path
