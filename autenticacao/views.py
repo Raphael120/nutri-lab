@@ -5,7 +5,6 @@ from django.conf import settings
 from django.contrib import auth, messages
 from django.contrib.auth.models import User
 from django.contrib.messages import constants
-from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
 from .models import Ativacao
