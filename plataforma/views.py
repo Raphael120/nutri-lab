@@ -3,15 +3,15 @@ from datetime import datetime
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.messages import constants
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.template.loader import get_template
 from django.views.decorators.csrf import csrf_exempt
+from xhtml2pdf import pisa
 
 from plataforma.models import DadosPaciente, Opcao, Paciente, Refeicao
 
-from .utils import dados_paciente_is_valid, paciente_is_valid
-
-# Create your views here.
+from .utils import dados_paciente_is_valid, link_callback, paciente_is_valid
 
 
 @login_required(login_url='/auth/logar')
@@ -217,7 +217,7 @@ def refeicao(request, id_paciente):
 
         messages.add_message(
             request,
-            level=constants.SUCCESS, 
+            level=constants.SUCCESS,
             message='Refeição cadastrada'
         )
         return redirect(f'/plano_alimentar/{id_paciente}')
@@ -243,3 +243,32 @@ def opcao(request, id_paciente):
             message='Opção cadastrada'
         )
         return redirect(f'/plano_alimentar/{id_paciente}')
+
+
+def exportar_refeicao(request, id_paciente):
+    paciente = get_object_or_404(Paciente, id=id_paciente)
+    refeicao = Refeicao.objects.filter(paciente=paciente).order_by('horario')
+    opcao = Opcao.objects.all()
+
+    template_path = 'plano_alimentar_pdf.html'
+    context = {
+        'paciente': paciente,
+        'refeicao': refeicao,
+        'opcao': opcao
+    }
+
+    response = HttpResponse(content='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="Plano alimentar - {paciente.nome} {paciente.sobrenome}.pdf"'
+
+    template = get_template(template_path)
+    html = template.render(context)
+
+    pisa_status = pisa.CreatePDF(
+        src=html,
+        dest=response,
+        link_callback=link_callback,
+    )
+    if pisa_status.err:
+        return HttpResponse('We had some errors <pre>' + html + '</pre>')
+
+    return response
