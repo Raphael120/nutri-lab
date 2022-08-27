@@ -49,7 +49,7 @@ As seguintes ferramentas foram utilizadas na construção do projeto:
 
 ## <div id="pre-requisitos">✅ Pré-requisitos</div>
 
-Antes de começar, você precisa ter o [Python](https://www.python.org/downloads/) instalado em sua maquina.
+Antes de começar, você precisa ter o [Python](https://www.python.org/downloads/) instalado em sua máquina.
 
 
 ## <div id="comecando">🏁 Começando</div>
